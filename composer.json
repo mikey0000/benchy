@@ -1,0 +1,43 @@
+{
+    "name": "gomox/benchy",
+    "description": "A simple apachebench visualization tool",
+    "keywords": ["benchmark", "apachebench", "ab"],
+    "homepage": "https://github.com/gomox/benchy",
+    "type": "library",
+    "license": "no idea",
+    "authors": [
+        {
+          "name": "Gonzalo Sainz-Trápaga",
+          "homepage": "https://github.com/gomox"
+        },
+        {
+            "name": "Ulrich Völkel",
+            "homepage": "https://github.com/u-voelkel"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/console": "^2.7"
+    },
+
+    "require-dev": {
+    },
+
+    "autoload": {
+        "classmap": [
+          "src/"
+        ],
+        "psr-4": {
+            "Benchy\\": "src/"
+        }
+    },
+
+    "bin": ["benchy"],
+
+    "extra": {
+        "branch-alias": {
+          "dev-master": "1.0.x-dev"
+        }
+    }
+}

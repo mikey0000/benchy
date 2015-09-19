@@ -1,3 +1,6 @@
 data/*.dat
 config.json
 index.html
+/vendor/
+/composer.phar
+/composer.lock

@@ -1,4 +1,4 @@
-Benchy 
+Benchy
 ======
 
 A simple apachebench visualization tool written in PHP.
