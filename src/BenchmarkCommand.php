@@ -20,20 +20,66 @@ class BenchmarkCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'The config file'
             )
+            /*
             ->addOption(
                 'output',
                 'o',
                 InputOption::VALUE_OPTIONAL,
                 'The output directory'
             )
+            */
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return null|int
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        //var_dump($input->getOption('config'));
         //var_dump($input->getOption('output'));
 
-        require 'benchy.php';
+        $configfile = $this->findConfigurationFile($input);
+        if (null === $configfile) {
+            $output->writeln('no config file found.');
+            return 1;
+        }
+
+
+        $datadir = getcwd() . '/data/';
+        if (!file_exists($datadir)) {
+            mkdir($datadir);
+        }
+
+        define('DATA_DIR', $datadir);
+
+        require __DIR__ . '/../benchy.php';
+    }
+
+    /**
+     * @param InputInterface $input
+     * @return string|null
+     */
+    private function findConfigurationFile(InputInterface $input)
+    {
+        $configfiles = array();
+
+        if (null !== $input->getOption('config')) {
+            $configfiles[] = $input->getOption('config');
+        } else {
+            $configfiles[] = getcwd() . '/benchy.json';
+            $configfiles[] = getcwd() . '/config.json';
+        }
+
+        $configfile = null;
+        foreach ($configfiles as $file) {
+            if (file_exists($file)) {
+                define('CONFIG_FILE', $file);
+                return $file;
+            }
+        }
+
+        return null;
     }
 }

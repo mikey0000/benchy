@@ -2,10 +2,18 @@
 
 namespace Benchy;
 
-class ApacheBenchResult {
-    private $results;
+class ApacheBenchResult
+{
+    /**
+     * @var string[]
+     */
+    private $results = array();
 
-    public function __construct($cmd_output) {
+    /**
+     * @param string $cmd_output
+     */
+    public function __construct($cmd_output)
+    {
         $expressions = array(
             "server_software"       => "/Server Software:        (.*)/",
             "server_hostname"       => "/Server Hostname:        (.*)/",
@@ -47,12 +55,32 @@ class ApacheBenchResult {
         foreach($expressions as $key => $regex) {
             preg_match_all($regex, $cmd_output, $matches);
             if (isset($matches[1][0])) {
-                $this->results[$key] = cast($matches[1][0], $types[$key]);
+                $this->results[$key] = $this->cast($matches[1][0], $types[$key]);
             }
         }
     }
 
-    public function getResults() {
+    /**
+     * @return string[]
+     */
+    public function getResults()
+    {
         return $this->results;
+    }
+
+    /**
+     * @param string $value
+     * @param string $type
+     * @return float|int|string
+     */
+    private function cast($value, $type)
+    {
+        if ($type == "int") {
+            return intval($value);
+        } else if ($type == "float") {
+            return floatval($value);
+        } else {
+            return $value;
+        }
     }
 }

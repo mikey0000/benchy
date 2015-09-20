@@ -1,5 +1,6 @@
 data/*.dat
 config.json
+benchy.json
 index.html
 /vendor/
 /composer.phar

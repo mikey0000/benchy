@@ -2,11 +2,21 @@
 
 namespace Benchy;
 
-class ApacheBenchRunner {
+class ApacheBenchRunner
+{
+    /**
+     * @var object
+     */
     private $config;
+
     private $defaultconfig;
 
-    public function __construct($config) {
+    /**
+     * @param array $config
+     * @throws \Exception
+     */
+    public function __construct($config)
+    {
         $this->defaultconfig = json_decode('
             {
                 "url": "http://localhost/",
@@ -29,14 +39,21 @@ class ApacheBenchRunner {
         $this->checkApacheBench();
     }
 
-    private function checkApacheBench() {
+    private function checkApacheBench()
+    {
         exec(AB_EXECUTABLE . " -V", $output, $return_var);
         if ($return_var != 0) {
-            throw new Exception("Could not execute ApacheBench! (used \"" .AB_EXECUTABLE. "\" as command)");
+            throw new \Exception("Could not execute ApacheBench! (used \"" .AB_EXECUTABLE. "\" as command)");
         }
     }
 
-    private function buildCommand($concurrency, $requests) {
+    /**
+     * @param $concurrency
+     * @param $requests
+     * @return string
+     */
+    private function buildCommand($concurrency, $requests)
+    {
         $s =  AB_EXECUTABLE;
 
         if (!is_null($this->config->cookie)) { $s .= " -C ".$this->config->cookie; }
@@ -52,21 +69,37 @@ class ApacheBenchRunner {
         return $s;
     }
 
-    public function hasComment() {
+    /**
+     * @return bool
+     */
+    public function hasComment()
+    {
         return $this->config->comment !== null;
     }
 
-    public function setComment($c) {
+    /**
+     * @param string $c
+     */
+    public function setComment($c)
+    {
         $this->config->comment = $c;
     }
 
-    public function getConfig() {
+    /**
+     * @return object
+     */
+    public function getConfig()
+    {
         return $this->config;
     }
 
-    public function runBench() {
-        $start = microtime(true);
-        $results = array();
+    /**
+     * @return ApacheBenchResultSet
+     */
+    public function runBench()
+    {
+        //$start = microtime(true);
+        $result = new ApacheBenchResultSet($this->getConfig());
 
         foreach($this->config->tests as $test) {
             $concurrency = $test->concurrency;
@@ -77,12 +110,11 @@ class ApacheBenchRunner {
             $output = shell_exec($command);
             ob_end_clean();
 
-            $res = new ApacheBenchResult($output);
-            $results[] = $res;
+            $result[] = new ApacheBenchResult($output);
         }
 
-        $end = microtime(true);
+        //$end = microtime(true);
 
-        return $results;
+        return $result;
     }
 }

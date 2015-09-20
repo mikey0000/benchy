@@ -2,18 +2,24 @@
 <?php
 
 $autoload = array(
-    __DIR__.'/../../vendor/autoload.php',
+    __DIR__.'/../../autoload.php',
     __DIR__.'/../vendor/autoload.php',
     __DIR__.'/vendor/autoload.php',
 );
 
 foreach ($autoload as $file) {
     if (file_exists($file)) {
-        require $file;
+        define('BENCHY_AUTOLOAD', $file);
         break;
     }
 }
 unset($file);
+
+if (!defined('BENCHY_AUTOLOAD')) {
+    return 1;
+}
+
+require BENCHY_AUTOLOAD;
 
 $command = new \Benchy\BenchmarkCommand();
 
