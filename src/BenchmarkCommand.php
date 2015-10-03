@@ -47,14 +47,16 @@ class BenchmarkCommand extends Command
         }
 
 
-        $datadir = getcwd() . '/data/';
+        $datadir = getcwd() . '/benchy/data/';
         if (!file_exists($datadir)) {
-            mkdir($datadir);
+            mkdir($datadir, 0777, true);
         }
 
         define('DATA_DIR', $datadir);
 
         require __DIR__ . '/../benchy.php';
+
+        return 0;
     }
 
     /**

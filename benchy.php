@@ -43,6 +43,11 @@ function main() {
         $results = $abr->runBench();
         $results->save($output_filename);
 
+        $indexFile = DATA_DIR . '../index.php';
+        if (!file_exists($indexFile)) {
+            copy(__DIR__ . '/index.php', $indexFile);
+        }
+
         /*
         $ret_obj = new stdClass();
         $ret_obj->config = $abr->getConfig();
@@ -60,7 +65,7 @@ function main() {
         echo "ERROR: " . $e->getMessage()."\n";
         exit(1);
     }
-} 
+}
 
 
 main();
